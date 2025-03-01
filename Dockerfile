@@ -19,8 +19,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Expose port 8000
-EXPOSE 8000
+# Expose port 8080
+EXPOSE 8080
 
 # Run the application
 CMD ["python3", "app.py"]
