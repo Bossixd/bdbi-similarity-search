@@ -1,5 +1,5 @@
 # Force x86_64 architecture and use a compatible base
-FROM debian:bullseye-slim
+FROM debian
 
 # Install essential x86_64 libraries and dependencies
 RUN apt-get update && \
