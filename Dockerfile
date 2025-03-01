@@ -1,5 +1,5 @@
 # Force x86_64 architecture and use a compatible base
-FROM debian
+FROM python:3.9-slim
 
 # Install essential x86_64 libraries and dependencies
 RUN apt-get update && \
