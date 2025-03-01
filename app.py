@@ -3,6 +3,7 @@ import subprocess
 import os
 import shlex
 import uuid
+import re
 
 app = Flask(__name__)
 
@@ -20,39 +21,31 @@ def run_executable():
         fasta_file.write(f">input_sequence\n{sequence}\n")
     
     try:
-        o = subprocess.run(f"./fasta36 c_elegans_tflink_mini.fasta fasta_buffer/{_uuid}.fasta", shell=True)
-        output = o.stdout
+        o = subprocess.run(f"./fasta36 -d 0 fasta_buffer/{_uuid}.fasta c_elegans_tflink.fasta", shell=True)
+        output = o.stdout.decode()
         error = o.stderr
     except Exception as e:
         print("Error:", e)
         print("Other: ", error)
     
-    # os.remove(f'fasta_buffer/{_uuid}.txt')
+    os.remove(f'fasta_buffer/{_uuid}.txt')
     
-    return jsonify({'uuid': _uuid, 'result': output}), 200
+    result = parse_fasta(output)
     
-    # data = request.get_json()
-    # user_input = data.get('input', '')
+    return jsonify({'result': result}), 200
 
-    # # Sanitize input to prevent command injection
-    # args = ['fasta36'] + shlex.split(user_input)
+#parses output of fasta36 and returns score
+def parse_fasta(output):
+    print(output)
+    srch = re.search("[0-9]+ residues in +[0-9]+ sequences", output)
+    n_sequence = int(output[srch.start() : srch.end()].split(' ')[-2])
 
-    # try:
-    #     result = subprocess.run(
-    #         args,
-    #         stdout=subprocess.PIPE,
-    #         stderr=subprocess.PIPE,
-    #         timeout=30  # Adjust timeout as needed
-    #     )
-    #     output = result.stdout.decode()
-    #     error = result.stderr.decode()
-    #     return jsonify({
-    #         'output': output,
-    #         'error': error,
-    #         'exit_code': result.returncode
-    #     }), 200
-    # except subprocess.TimeoutExpired:
-    #     return jsonify({'error': 'Timeout occurred'}), 500
+    srch = re.search("The best scores are:", output)
+    buffer = output[srch.start():].split("\n")[1].split(' ')
+
+    return {
+        buffer[0]: float(buffer[-1])
+    }
 
 if __name__ == '__main__':
     app.run(
