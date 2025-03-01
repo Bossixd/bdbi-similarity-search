@@ -20,7 +20,7 @@ def run_executable():
         fasta_file.write(f">input_sequence\n{sequence}\n")
     
     try:
-        o = subprocess.run(f"./fasta36 c_elegans_tflink.fasta fasta_buffer/{_uuid}.fasta", shell=True)
+        o = subprocess.run(f"./fasta36 c_elegans_tflink_mini.fasta fasta_buffer/{_uuid}.fasta", shell=True)
         output = o.stdout
         error = o.stderr
     except Exception as e:
