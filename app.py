@@ -28,7 +28,7 @@ def run_executable():
         print("Error:", e)
         print("Other: ", error)
     
-    os.remove(f'fasta_buffer/{_uuid}.txt')
+    os.remove(f'fasta_buffer/{_uuid}.fasta')
     
     result = parse_fasta(output)
     
