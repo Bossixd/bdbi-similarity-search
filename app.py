@@ -21,7 +21,7 @@ def run_executable():
         fasta_file.write(f">input_sequence\n{sequence}\n")
     
     try:
-        o = subprocess.run(f"./fasta36 -d 0 fasta_buffer/{_uuid}.fasta c_elegans_tflink.fasta", shell=True)
+        o = subprocess.run(f"./fasta36 -d 0 fasta_buffer/{_uuid}.fasta c_elegans_tflink.fasta", capture_output=True, shell=True)
         output = o.stdout.decode()
         error = o.stderr
     except Exception as e:
@@ -36,16 +36,22 @@ def run_executable():
 
 #parses output of fasta36 and returns score
 def parse_fasta(output):
-    print(output)
-    srch = re.search("[0-9]+ residues in +[0-9]+ sequences", output)
-    n_sequence = int(output[srch.start() : srch.end()].split(' ')[-2])
-
-    srch = re.search("The best scores are:", output)
-    buffer = output[srch.start():].split("\n")[1].split(' ')
-
-    return {
-        buffer[0]: float(buffer[-1])
-    }
+    start = re.search("The best scores are:", output)
+    end = re.search("[0-9]+ residues in +[0-9]+ query", output)
+    
+    buffer = output[start.end():end.start() - 2]
+    buffer = buffer.split('\n')[1:]
+    
+    tfs = [x.split(' ')[0] for x in buffer]
+    scores = [float(x.split(' ')[-1]) for x in buffer]
+    
+    return_list = []
+    for i in range(len(tfs)):
+        return_list.append({
+            "tf": tfs[i],
+            "score": scores[i]
+        })
+    return return_list
 
 if __name__ == '__main__':
     app.run(
