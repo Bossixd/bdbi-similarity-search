@@ -4,8 +4,11 @@ import os
 import shlex
 import uuid
 import re
+import pandas as pd
 
 app = Flask(__name__)
+
+sequences_df = print(pd.read_csv('c_elegans_tflink.csv'))
 
 @app.route('/run', methods=['POST'])
 def run_executable():
@@ -47,8 +50,10 @@ def parse_fasta(output):
     
     return_list = []
     for i in range(len(tfs)):
+        sequence = sequences_df[sequences_df['id'] == tfs[i].split(';')[0]].iloc[0]['sequence']
         return_list.append({
             "tf": tfs[i],
+            "sequence": sequence,
             "score": scores[i]
         })
     return return_list
