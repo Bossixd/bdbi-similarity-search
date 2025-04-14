@@ -18,3 +18,6 @@ import pandas as pd
 #     pd.DataFrame(arr[1:]).to_csv('c_elegans_tflink.csv', index=False)
 
 sequences_df = pd.read_csv('c_elegans_tflink.csv')
+
+tfs = "TFLinkLS00543759;Q93560;blmp-1;ce10;chrI:72909"
+print(tfs.split(';')[0])

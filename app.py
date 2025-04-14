@@ -50,10 +50,10 @@ def parse_fasta(output):
     
     return_list = []
     for i in range(len(tfs)):
-        # sequence = sequences_df[sequences_df['id'] == tfs[i].split(';')[0]].iloc[0]['sequence']
+        sequence = sequences_df[sequences_df['id'] == tfs[i].split(';')[0]].iloc[0]['sequence']
         return_list.append({
             "tf": tfs[i],
-            # "sequence": sequence,
+            "sequence": sequence,
             "score": scores[i]
         })
     return return_list
