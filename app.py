@@ -8,7 +8,7 @@ import pandas as pd
 
 app = Flask(__name__)
 
-sequences_df = print(pd.read_csv('c_elegans_tflink.csv'))
+sequences_df = pd.read_csv('c_elegans_tflink.csv')
 
 @app.route('/run', methods=['POST'])
 def run_executable():
